@@ -15,10 +15,7 @@ const totalCountOtherInput = document.getElementsByClassName("total-input")[2];
 const totalFullCount = document.getElementsByClassName("total-input")[3];
 const totalCountRollback = document.getElementsByClassName("total-input")[4];
 let screens = [];
-document.querySelectorAll(".screen").forEach(function (item) {
-  screens.push(item);
-});
-console.log(screens);
+
 let appData = {
   title: "",
   screens: [],
@@ -147,5 +144,9 @@ let appData = {
 
 //=============================================================================================
 //=============================================================================================
+document.querySelectorAll(".screen").forEach(function (item) {
+  screens.push(item);
+});
+
 appData.start();
 //=============================================================================================
