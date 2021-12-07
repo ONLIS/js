@@ -1,7 +1,24 @@
 "use strict";
 
 //=============================================================================================
-
+const pageTitle = document.getElementsByTagName("h1")[0];
+const btnCalc = document.getElementsByClassName("handler_btn")[0];
+const btnReset = document.getElementsByClassName("handler_btn")[1];
+const btnPlus = document.querySelector(".screen-btn");
+const otherItemsPercent = document.querySelectorAll(".other-items.percent");
+const otherItemsNumber = document.querySelectorAll(".other-items.number");
+const inputRange = document.querySelector(".rollback input[type=range]");
+const spanRangeVal = document.querySelector(".rollback .range-value");
+const totalInput = document.getElementsByClassName("total-input")[0];
+const totalCountInput = document.getElementsByClassName("total-input")[1];
+const totalCountOtherInput = document.getElementsByClassName("total-input")[2];
+const totalFullCount = document.getElementsByClassName("total-input")[3];
+const totalCountRollback = document.getElementsByClassName("total-input")[4];
+let screens = [];
+document.querySelectorAll(".screen").forEach(function (item) {
+  screens.push(item);
+});
+console.log(screens);
 let appData = {
   title: "",
   screens: [],
