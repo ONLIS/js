@@ -32,6 +32,8 @@ let appData = {
 
   init: function () {
     appData.addTitle();
+    inputRange.value = appData.rollback;
+    spanRangeVal.textContent = inputRange.value + "%";
     inputRange.addEventListener("input", appData.getRollback);
     btnCalc.addEventListener("click", appData.start);
     btnPlus.addEventListener("click", appData.addScreenBlock);
@@ -73,6 +75,7 @@ let appData = {
   },
 
   addScreenBlock: function () {
+    appData.fullPrice = 0;
     const cloneScreen = screens[0].cloneNode(true);
     screens[screens.length - 1].after(cloneScreen);
     screens = document.querySelectorAll(".screen");
@@ -130,6 +133,12 @@ let appData = {
   getRollback: function () {
     appData.rollback = inputRange.value;
     spanRangeVal.textContent = inputRange.value + "%";
+    if (appData.fullPrice > 0) {
+      appData.servicePercentPrice = Math.ceil(
+        appData.fullPrice - appData.fullPrice * (appData.rollback / 100)
+      );
+      totalCountRollback.value = appData.servicePercentPrice;
+    }
   },
   showResult: function () {
     let totalScreens = 0;
