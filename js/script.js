@@ -31,12 +31,12 @@ let appData = {
   servicesPercent: {},
 
   init: function () {
-    appData.addTitle();
-    inputRange.value = appData.rollback;
+    this.addTitle();
+    inputRange.value = this.rollback;
     spanRangeVal.textContent = inputRange.value + "%";
-    inputRange.addEventListener("input", appData.getRollback);
-    btnCalc.addEventListener("click", appData.start);
-    btnPlus.addEventListener("click", appData.addScreenBlock);
+    inputRange.addEventListener("input", this.getRollback);
+    btnCalc.addEventListener("click", this.start);
+    btnPlus.addEventListener("click", this.addScreenBlock);
   },
 
   addTitle: function () {
