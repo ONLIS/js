@@ -9,6 +9,8 @@ const otherItemsPercent = document.querySelectorAll(".other-items.percent");
 const otherItemsNumber = document.querySelectorAll(".other-items.number");
 const inputRange = document.querySelector(".rollback input[type=range]");
 const spanRangeVal = document.querySelector(".rollback .range-value");
+const chckCMS = document.getElementById("cms-open");
+const cmsSelect = document.getElementById("cms-select");
 
 const totalInput = document.getElementsByClassName("total-input")[0];
 const totalCountInput = document.getElementsByClassName("total-input")[1];
@@ -29,6 +31,8 @@ let appData = {
   adaptive: true,
   servicesNumber: {},
   servicesPercent: {},
+  cmsPercent: 0,
+  cmsPercentInput: {},
 
   init: function () {
     this.addTitle();
@@ -38,6 +42,9 @@ let appData = {
     btnCalc.addEventListener("click", this.start);
     btnReset.addEventListener("click", this.reset);
     btnPlus.addEventListener("click", this.addScreenBlock);
+    chckCMS.addEventListener("change", this.cmsOpen);
+    cmsSelect.addEventListener("change", this.cmsSelect);
+
     otherItemsPercent.forEach((item) => {
       let input = item.querySelector("input[type=text]");
       input.disabled = false;
@@ -53,14 +60,22 @@ let appData = {
   },
   start: function () {
     appData.allData = true;
-    appData.addScreens();
-    if (appData.allData) {
-      appData.addServices();
-      appData.addPrices();
-      appData.showResult();
-      appData.blockItems();
+    if (chckCMS.checked && appData.cmsPercent == 0) {
+      appData.allData = false;
+      alert("Выберите тип CMS или введите %");
     } else {
-      alert("Пожалуйста, заполните все поля");
+      appData.addScreens();
+      if (appData.allData) {
+        chckCMS.disabled = true;
+        cmsSelect.disabled = true;
+        appData.cmsPercentInput.disabled = true;
+        appData.addServices();
+        appData.addPrices();
+        appData.showResult();
+        appData.blockItems();
+      } else {
+        alert("Пожалуйста, заполните все поля");
+      }
     }
   },
   addScreens: function () {
@@ -134,6 +149,8 @@ let appData = {
     this.fullPrice =
       this.screensPrice + this.servicePricesNumber + this.servicePricesPercent;
 
+    this.fullPrice = this.fullPrice * (1 + this.cmsPercent / 100);
+
     this.servicePercentPrice = Math.ceil(
       this.fullPrice - this.fullPrice * (this.rollback / 100)
     );
@@ -146,6 +163,44 @@ let appData = {
         this.fullPrice - this.fullPrice * (this.rollback / 100)
       );
       totalCountRollback.value = this.servicePercentPrice;
+    }
+  },
+  cmsOpen: function () {
+    if (chckCMS.checked) {
+      document.querySelector(".hidden-cms-variants").style.display = "flex";
+    } else {
+      const cmsVariants = document.querySelector(".hidden-cms-variants");
+      const div = cmsVariants.querySelector(".main-controls__input");
+      document.querySelector(".hidden-cms-variants").style.display = "none";
+      div.querySelector("input").value = "";
+      div.style.display = "none";
+      cmsSelect[0].selected = true;
+      chckCMS.checked = false;
+      appData.cmsPercent = 0;
+    }
+  },
+  cmsSelect: function () {
+    const cmsVariants = document.querySelector(".hidden-cms-variants");
+    const div = cmsVariants.querySelector(".main-controls__input");
+    appData.cmsPercentInput = cmsVariants.querySelector("input");
+    appData.cmsPercentInput.addEventListener("keyup", () => {
+      if (appData.cmsPercentInput.value > 0) {
+        appData.cmsPercent = appData.cmsPercentInput.value;
+      } else {
+        appData.cmsPercent = 0;
+        appData.cmsPercentInput.value = "";
+      }
+    });
+
+    if (cmsSelect.value === "other") {
+      appData.cmsPercent = 0;
+      div.style.display = "block";
+    } else if (cmsSelect.value === "") {
+      appData.cmsPercent = 0;
+      div.style.display = "none";
+    } else {
+      appData.cmsPercent = +cmsSelect.value;
+      div.style.display = "none";
     }
   },
   showResult: function () {
@@ -222,6 +277,13 @@ let appData = {
     this.adaptive = true;
     this.servicesNumber = {};
     this.servicesPercent = {};
+    this.cmsPercent = 0;
+    this.cmsPercentInput = {};
+    chckCMS.disabled = false;
+    cmsSelect.disabled = false;
+    appData.cmsPercentInput.disabled = false;
+    chckCMS.checked = false;
+    appData.cmsOpen();
   },
 };
 
